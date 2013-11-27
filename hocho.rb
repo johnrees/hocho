@@ -18,8 +18,6 @@ class Hocho < Sinatra::Base
     recipe = recipe ? to_hash(decode(recipe)) : {}
     defaults = { 'o' => 'c', 'd' => 100, 'q' => 80, 'f' => 'jpg' }
     recipe = defaults.merge(recipe)
-    p recipe
-    p url
 
     # dimensions = sanitize_dimensions(dimensions)
     halt 403 unless url && domain_is_allowed?(url)

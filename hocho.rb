@@ -11,7 +11,7 @@ class Hocho < Sinatra::Base
   #   crop/50x50/domain.com/yourimage.jpg
   #
   get '/:recipe/:url/:signature' do |recipe, url, signature|
-    halt 403 unless signature == Digest::SHA1.hexdigest("#{recipe}#{url}#{ENV['SALT']}")
+    # halt 403 unless signature == Digest::SHA1.hexdigest("#{recipe}#{url}#{ENV['SALT']}")
     expires (60 * 60 * 24 * 365), :public
     url = decode(url)
 

@@ -12,19 +12,27 @@ class Hocho < Sinatra::Base
   #
   get '/:recipe/:url/:signature' do |recipe, url, signature|
     # halt 403 unless signature == Digest::SHA1.hexdigest("#{recipe}#{url}#{ENV['SALT']}")
-    expires (60 * 60 * 24 * 365), :public
-    url = decode(url)
+    file = "tmp/#{signature}"
+    if File.exists? file
+      p "CACHE HIT"
+      send_file(file, :filename => "fablabsio-image", :disposition => "inline")
+    else
+      p "CACHE MISS"
+      expires (60 * 60 * 24 * 365), :public
+      url = decode(url)
 
-    recipe = recipe ? to_hash(decode(recipe)) : {}
-    defaults = { 'o' => 'c', 'd' => 100, 'q' => 80, 'f' => 'jpg' }
-    recipe = defaults.merge(recipe)
+      recipe = recipe ? to_hash(decode(recipe)) : {}
+      defaults = { 'o' => 'c', 'd' => 100, 'q' => 80, 'f' => 'jpg' }
+      recipe = defaults.merge(recipe)
 
-    # dimensions = sanitize_dimensions(dimensions)
-    halt 403 unless url && domain_is_allowed?(url)
-    halt 403 unless  %w{ c r t }.include?(recipe['o'])
-    image = MiniMagick::Image.open(url)
-    send(recipe['o'], image, recipe['d'], recipe['q'], recipe['f'])
-    send_file(image.path, :filename => Time.now.to_i.to_s, :type => "image/jpeg", :disposition => "inline")
+      # dimensions = sanitize_dimensions(dimensions)
+      # halt 403 unless url && domain_is_allowed?(url)
+      halt 403 unless  %w{ c r t }.include?(recipe['o'])
+      image = MiniMagick::Image.open(url)
+      image.write "tmp/#{signature}"
+      send(recipe['o'], image, recipe['d'], recipe['q'], recipe['f'])
+      send_file(image.path, :filename => "fablabsio-image", :type => "image/jpeg", :disposition => "inline")
+    end
   end
 
 protected

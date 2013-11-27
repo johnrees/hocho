@@ -1,0 +1,3 @@
+HOCHO
+
+Simple image resizer

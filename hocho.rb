@@ -47,6 +47,7 @@ protected
       command.gravity("Center")
       command.extent(dimensions)
       command.quality quality
+      command.background("#FFFFFF")
     end
     image.format(format)
   end
@@ -62,6 +63,7 @@ protected
       #
       command.filter("box")
       command.resize(dimensions)
+      command.background("#FFFFFF")
       command.quality quality
     end
     image.format(format)
@@ -74,6 +76,7 @@ protected
       # decrease in quality
       #
       command.filter("box")
+      command.background("#FFFFFF")
       command.resize("#{dimensions}>")
       command.extent(dimensions)
       command.gravity("Center")
